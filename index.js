@@ -12,13 +12,31 @@
     - Give instances of Person the ability to `.poop()`:
         + When an instance poops, its `stomach` array should be empty.
     - Give instances of Person a method `.toString()`:
-        + It should return a string with `name` and `age`. Example: "Mary, 50"
+        + It should return a string with `name` and `age`. Example: "Mary, 50"  
 */
 
-function Person() {
-
+function Person(name, age) {
+  this.name = name;
+  this.age = age;
+  this.stomach = [];
 }
-
+Person.prototype.eat =function(){
+  if(this.stomach.length < 10){
+    this.stomach.push('edible');
+  }
+}
+Person.prototype.poop = function(){
+  this.stomach = [];
+}
+Person.prototype.toString = function(){
+  return `${this.name}, ${this.age}`;
+}
+const mary = new Person('Mary', 50);
+console.log(mary.toString());
+mary.eat('pizza');
+console.log(mary.stomach);
+mary.poop();
+console.log(mary.stomach);
 
 /*
   TASK 2
@@ -36,8 +54,25 @@ function Person() {
         + The `drive` method should return a string "I ran out of fuel at x miles!" x being `odometer`.
 */
 
-function Car() {
-
+function Car(model, npg) {
+  this.model = model;
+  this.milesPerGallon = npg;
+  this.tank = 0;
+  this.odometer = 0;
+}
+Car.prototype.fill = function(gallons){
+  this.name = this.tank + gallons;
+}
+Car.prototype.drive = function(dist){
+  const drivableMiles = this.tank * this.milesPerGallon;
+  if(dist <= drivableMiles){
+    this.odometer = this.odometer + dist;
+    this.tank = this.tank - (dist / this.milesPerGallon);
+  }else{
+    this.odometer = this.odometer + drivableMiles;
+    this.tank = 0;
+    return `I ran out of fuel at ${this.odometer} miles`;
+  }
 }
 
 
@@ -49,18 +84,24 @@ function Car() {
         + Should return a string "Playing with x", x being the favorite toy.
 */
 
-function Baby() {
+function Baby(name, age, favoriteToy) {
+  Person.call(this, name, age);
+  this.favoriteToy = favoriteToy;
 
+}
+Baby.prototype = Object.create(Person.prototype);
+Baby.prototype.play = function(){
+  return `Playing with ${this.favoriteToy}`;
 }
 
 
 /* 
   TASK 4
   In your own words explain the four principles for the "this" keyword below:
-  1. 
-  2. 
-  3. 
-  4. 
+  1. Window Binding - when none of the of the other rules apply, this will return the window or global object in mode or undefined in strict mode.
+  2. Implicit binding - when the function is invoked look to the left of the dot that's what this refers to 
+  3. Explicit binding - .call, .applyy, .bind
+  4. New binding - when a function is created as a constructor this points to the newly created object 
 */
 
 ///////// END OF CHALLENGE /////////
